@@ -33,5 +33,7 @@ class Button:
     def click(self):
         if self.function == 'start':
             self.app.ui = tetris.TetrisGame(self.app, 50, 15) # Change the displayed ui to the simulation
+        elif self.function == 'save_score':
+            print("Saved score")
         else:
             self.bgcolor = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
