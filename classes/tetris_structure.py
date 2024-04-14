@@ -129,7 +129,7 @@ class Structure:
             rotated_x = self.center[0] + (point[1] - self.center[1])
             rotated_y = self.center[1] - (point[0] - self.center[0])
             try: # checks if the rotated coordinates aren't outside the map or a placed block
-                if self.game.map[rotated_y][rotated_x] == 2:
+                if rotated_y not in range(self.game.ROWS) or rotated_x not in range(self.game.COLUMNS) or self.game.map[rotated_y][rotated_x] == 2:
                     possible = False
             except:
                 possible = False

@@ -3,12 +3,12 @@ import time
 import pygame
 from classes import tetris_structure
 class TetrisGame:
-    def __init__(self, app, rows, colums):
+    def __init__(self, app, rows, columns):
         self.app = app
         self.ROWS = rows
-        self.COLUMNS = colums
+        self.COLUMNS = columns
         self.buttons = []
-        self.map = [[0 for _ in range(colums)] for i in range(rows)]
+        self.map = [[0 for _ in range(columns)] for i in range(rows)]
         self.tile_size = self.app.height/self.ROWS
         self.border = 1
         self.x_offset = (self.app.width - self.tile_size * self.COLUMNS) / 2
