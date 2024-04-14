@@ -32,7 +32,7 @@ class Button:
         self.app.screen.blit(self.display_text, self.display_text_rect)
     def click(self):
         if self.function == 'start':
-            self.app.ui = tetris.TetrisGame(self.app, 50, 15) # Change the displayed ui to the simulation
+            self.app.ui = tetris.TetrisGame(self.app, 20, 10) # Change the displayed ui to the simulation
         elif self.function == 'save_score':
             print("Saved score")
         else:
