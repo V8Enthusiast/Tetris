@@ -77,29 +77,40 @@ class Structure:
             block.render()
 
     def move(self, p, q):
-        if self.can_move:
+        if self.can_move and self.check_if_move_possible(p, q):
             for block in self.blocks:
                 self.game.map[block.y][block.x] = 0
-                if block.x + q >= 0 and block.x + q < self.game.COLUMNS and self.game.map[block.y][block.x + q] != 2:
-                    if self.can_move_left and q < 0:
-                        block.x += q
-                    elif self.can_move_right and q > 0:
-                        block.x += q
-                elif block.x + q < 0:
-                    self.can_move_left = False
-                elif block.x + q >= self.game.COLUMNS - 1:
-                    self.can_move_right = False
-                if block.y + p >= 0 and block.y + p < self.game.ROWS - 1 and self.game.map[block.y + p + 1][block.x] != 2:
-                    block.y += p
-                else:
-                    block.y += p
-                    self.can_move = False
+                block.x += q
+                block.y += p
                 self.game.map[block.y][block.x] = 1
+                # self.game.map[block.y][block.x] = 0
+                # if block.x + q in range(self.game.COLUMNS) and self.game.map[block.y][block.x + q] != 2:
+                #     block.x += q
+                # if block.y + p >= 0 and block.y + p < self.game.ROWS - 1 and self.game.map[block.y + p + 1][block.x] != 2:
+                #     block.y += p
+                # else:
+                #     block.y += p
+                #     self.can_move = False
+                # self.game.map[block.y][block.x] = 1
             if self.center is not None:
                 self.center = (self.center[0] + q, self.center[1] + p)
 
-    # self.game.map[rotated_y][rotated_x] = 1
-    # self.game.map[point[1]][point[0]] = 0
+    def check_if_move_possible(self, p, q):
+        possible = True
+        for block in self.blocks:
+            if block.x + q in range(self.game.COLUMNS) and self.game.map[block.y][block.x + q] == 2:
+                possible = False
+            elif block.x + q not in range(self.game.COLUMNS):
+                possible = False
+
+            if block.y + p in range(self.game.ROWS) and self.game.map[block.y + p][block.x] == 2:
+                possible = False
+                self.can_move = False
+            elif block.y + p not in range(self.game.ROWS):
+                possible = False
+                self.can_move = False
+        return possible
+
     def rotate(self):
         if self.center is not None and self.check_if_rotation_possible():
             for block in self.blocks:
@@ -121,7 +132,6 @@ class Structure:
                 if self.game.map[rotated_y][rotated_x] == 2:
                     possible = False
             except:
-                print(self.center)
                 possible = False
                 break
         return possible
