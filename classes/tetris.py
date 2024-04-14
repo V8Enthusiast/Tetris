@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from classes import tetris_structure
 class TetrisGame:
@@ -15,8 +17,11 @@ class TetrisGame:
         self.placed_structures = []
         self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
         pygame.mouse.set_pos(self.x_offset + self.block_spawner_x * self.tile_size, self.y_offset + self.app.height/2)
-        self.clock = pygame.time.Clock()
-        self.fps = 5
+        self.clock = time.time()
+        self.move_down_faster = False
+        self.move_down_faster_speed = 30
+        self.fps = 1
+
 
     def render(self):
         for r_idx, r in enumerate(self.map):
@@ -27,12 +32,13 @@ class TetrisGame:
         for structure in self.placed_structures:
             structure.render()
         self.current_structure.render()
-        self.current_structure.move(1, 0)
+        if time.time() > self.clock + 1/self.fps or (self.move_down_faster and time.time() > self.clock + 1/self.move_down_faster_speed):
+            self.current_structure.move(1, 0)
+            self.clock = time.time()
         if self.current_structure.can_move is False:
             self.placed_structures.append(self.current_structure)
             self.current_structure.place()
             self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
-        self.clock.tick(self.fps)
 
 
 
@@ -42,7 +48,16 @@ class TetrisGame:
                 self.app.run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    self.current_structure.move(1, 0)
+                    self.move_down_faster = True
+                if event.key == pygame.K_UP:
+                    self.current_structure.rotate()
                 if event.key == pygame.K_SPACE:
                     self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+                if event.key == pygame.K_LEFT:
+                    self.current_structure.move(0, -1)
+                if event.key == pygame.K_RIGHT:
+                    self.current_structure.move(0, 1)
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    self.move_down_faster = False
 
