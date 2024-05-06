@@ -59,8 +59,11 @@ def generate_random_structure(x, y, game):
     for r, row in enumerate(template):
         for c, value in enumerate(row):
             if value == 1:
-                blocks.append(block.Block(x + c, y + r, game, colors[color_idx], border_colors[color_idx]))
+                tetris_block = block.Block(x + c, y + r, game, colors[color_idx], border_colors[color_idx])
+                blocks.append(tetris_block)
+                game.blocks[(x + c, y + r)] = tetris_block
                 outline_blocks.append(block.Block(x + c, y + r, game, game.tile_color, colors[color_idx]))
+
     if center is not None:
         return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]))
     else:
@@ -88,8 +91,10 @@ class Structure:
         if self.can_move and self.check_if_move_possible(p, q):
             for block in self.blocks:
                 self.game.map[block.y][block.x] = 0
+                self.game.blocks[(block.x, block.y)] = None
                 block.x += q
                 block.y += p
+                self.game.blocks[(block.x, block.y)] = block
                 self.game.map[block.y][block.x] = 1
                 # self.game.map[block.y][block.x] = 0
                 # if block.x + q in range(self.game.COLUMNS) and self.game.map[block.y][block.x + q] != 2:
@@ -142,9 +147,11 @@ class Structure:
                 rotated_y = self.center[1] - (point[0] - self.center[0])
 
                 self.game.map[block.y][block.x] = 0
+                self.game.blocks[(block.x, block.y)] = None
                 self.game.map[rotated_y][rotated_x] = 1
                 block.x = rotated_x
                 block.y = rotated_y
+                self.game.blocks[(block.x, block.y)] = block
             self.calculate_outline()
     def check_if_rotation_possible(self):
         possible = True
@@ -163,3 +170,4 @@ class Structure:
     def place(self):
         for block in self.blocks:
             self.game.map[block.y][block.x] = 2
+            block.moving = False
