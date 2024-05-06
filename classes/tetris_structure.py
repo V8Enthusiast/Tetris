@@ -1,4 +1,6 @@
 import random
+from copy import deepcopy
+
 from classes import block
 import pygame
 
@@ -48,6 +50,7 @@ centers = [
 
 def generate_random_structure(x, y, game):
     blocks = []
+    outline_blocks = []
     color_idx = random.randrange(len(colors))
 
     template_idx = random.randrange(len(templates))
@@ -57,13 +60,14 @@ def generate_random_structure(x, y, game):
         for c, value in enumerate(row):
             if value == 1:
                 blocks.append(block.Block(x + c, y + r, game, colors[color_idx], border_colors[color_idx]))
+                outline_blocks.append(block.Block(x + c, y + r, game, game.tile_color, colors[color_idx]))
     if center is not None:
-        return Structure(game, blocks, color_idx, (x + center[0], y + center[1]))
+        return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]))
     else:
-        return Structure(game, blocks, color_idx, None)
+        return Structure(game, blocks, outline_blocks, color_idx, None)
 
 class Structure:
-    def __init__(self, game, blocks, color_idx, center):
+    def __init__(self, game, blocks, outline_blocks, color_idx, center):
         self.game = game
         self.blocks = blocks
         self.color_idx = color_idx
@@ -71,8 +75,12 @@ class Structure:
         self.can_move_left = True
         self.can_move_right = True
         self.center = center
+        self.outline_blocks = outline_blocks
 
     def render(self):
+        if self.can_move:
+            for block in self.outline_blocks:
+                block.render()
         for block in self.blocks:
             block.render()
 
@@ -94,8 +102,21 @@ class Structure:
                 # self.game.map[block.y][block.x] = 1
             if self.center is not None:
                 self.center = (self.center[0] + q, self.center[1] + p)
+            self.calculate_outline()
 
-    def check_if_move_possible(self, p, q):
+    def calculate_outline(self):
+        if self.can_move:
+            y = 0
+            while self.check_if_move_possible(y, 0, True):
+                y += 1
+            y -= 1
+
+            for block_idx in range(4):
+                outline_y = self.blocks[block_idx].y + y
+                if outline_y < self.game.ROWS:
+                    self.outline_blocks[block_idx].y = outline_y
+                    self.outline_blocks[block_idx].x = self.blocks[block_idx].x
+    def check_if_move_possible(self, p, q, outline=False):
         possible = True
         for block in self.blocks:
             if block.x + q in range(self.game.COLUMNS) and self.game.map[block.y][block.x + q] == 2:
@@ -105,10 +126,12 @@ class Structure:
 
             if block.y + p in range(self.game.ROWS) and self.game.map[block.y + p][block.x] == 2:
                 possible = False
-                self.can_move = False
+                if outline is False:
+                    self.can_move = False
             elif block.y + p not in range(self.game.ROWS):
                 possible = False
-                self.can_move = False
+                if outline is False:
+                    self.can_move = False
         return possible
 
     def rotate(self):
@@ -122,6 +145,7 @@ class Structure:
                 self.game.map[rotated_y][rotated_x] = 1
                 block.x = rotated_x
                 block.y = rotated_y
+            self.calculate_outline()
     def check_if_rotation_possible(self):
         possible = True
         for block in self.blocks:

@@ -2,9 +2,12 @@ import time
 
 import pygame
 from classes import tetris_structure
+colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
 class TetrisGame:
     def __init__(self, app, rows, columns):
         self.app = app
+        self.tile_color = (100, 100, 100)
+        self.tile_outline_color = (40, 40, 40)
         self.ROWS = rows
         self.COLUMNS = columns
         self.buttons = []
@@ -26,16 +29,20 @@ class TetrisGame:
         self.accelerated_moving_speed = 20
         self.fps = 1
 
-
-    def render(self):
+    def draw_tiles(self):
         for r_idx, r in enumerate(self.map):
             for c_idx, c in enumerate(r):
                 rect = pygame.Rect(self.x_offset + c_idx * self.tile_size, self.y_offset + r_idx * self.tile_size, self.tile_size, self.tile_size)
-                pygame.draw.rect(self.app.screen, (100, 100, 100), rect)
-                pygame.draw.rect(self.app.screen, (40, 40, 40), rect, self.border)
+                pygame.draw.rect(self.app.screen, self.tile_color, rect)
+                if 1 == 2:#(c_idx, r_idx) in self.current_structure.outline_coords:
+                    pygame.draw.rect(self.app.screen, colors[self.current_structure.color_idx], rect, self.border)
+                else:
+                    pygame.draw.rect(self.app.screen, self.tile_outline_color, rect, self.border)
         for structure in self.placed_structures:
             structure.render()
         self.current_structure.render()
+    def render(self):
+        self.draw_tiles()
         if time.time() > self.clock + 1/self.fps or (self.move_down_faster and time.time() > self.clock + 1/self.accelerated_moving_speed):
             self.current_structure.move(1, 0)
             self.clock = time.time()
