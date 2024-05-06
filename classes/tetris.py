@@ -56,6 +56,12 @@ class TetrisGame:
         for structure in self.placed_structures:
             structure.render()
         self.current_structure.render()
+        score_font = pygame.font.SysFont('Impact', 24)
+        level_surface = score_font.render(f"Level: {self.level}", True, (255, 255, 255))
+        lines_surface = score_font.render(f"Lines Cleared: {self.lines_cleared}", True, (255, 255, 255))
+        self.app.screen.blit(level_surface, (10, 10))
+        self.app.screen.blit(lines_surface, (10, 40))
+
         if self.debug:
             for block in self.blocks.values():
                 if block is not None:
@@ -95,8 +101,8 @@ class TetrisGame:
     def render(self):
         if self.game_over:
             self.draw_tiles()
-            game_over_font = pygame.font.SysFont('Impact', 148)  # You can choose another font and size
-            game_over_text = game_over_font.render("Game Over", True, (255, 255, 255))  # White color
+            game_over_font = pygame.font.SysFont('Impact', 148)
+            game_over_text = game_over_font.render("Game Over", True, (255, 255, 255))
             text_rect = game_over_text.get_rect(center=(self.app.width // 2, self.app.height // 2))
             self.app.screen.blit(game_over_text, text_rect)
         else:
