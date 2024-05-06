@@ -3,6 +3,9 @@ import time
 import pygame
 from classes import tetris_structure
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
+
+pygame.font.init()
+font = pygame.font.Font(None, 24)
 class TetrisGame:
     def __init__(self, app, rows, columns):
         self.app = app
@@ -30,6 +33,7 @@ class TetrisGame:
         self.moving_speed = 10
         self.accelerated_moving_speed = 20
         self.fps = 1
+        self.debug = False
 
     def draw_tiles(self):
         for r_idx, r in enumerate(self.map):
@@ -37,24 +41,33 @@ class TetrisGame:
                 rect = pygame.Rect(self.x_offset + c_idx * self.tile_size, self.y_offset + r_idx * self.tile_size, self.tile_size, self.tile_size)
                 pygame.draw.rect(self.app.screen, self.tile_color, rect)
                 pygame.draw.rect(self.app.screen, self.tile_outline_color, rect, self.border)
+
         for structure in self.placed_structures:
             structure.render()
         self.current_structure.render()
+        if self.debug:
+            for block in self.blocks.values():
+                if block is not None:
+                    block.render()
+            for r_idx, r in enumerate(self.map):
+                for c_idx, c in enumerate(r):
+                    rect = pygame.Rect(self.x_offset + c_idx * self.tile_size, self.y_offset + r_idx * self.tile_size,
+                                       self.tile_size, self.tile_size)
+                    text_surface = font.render(str(c), True, (255, 255, 255))
+                    text_rect = text_surface.get_rect(center=rect.center)
+                    self.app.screen.blit(text_surface, text_rect)
     def check_for_completed_rows(self):
         rows_cleared = 0
         for row_id, row in enumerate(self.map):
             if 0 not in row and 1 not in row:
-                print(1)
                 rows_cleared += 1
                 for i in range(self.COLUMNS):
-                    print(2)
                     self.map[row_id][i] = 0
-                for r in range(row_id, 0, -1):
+                for r in range(row_id, -1, -1):
                     for c in range(self.COLUMNS):
                         if self.map[r][c] == 2 and self.map[r + 1][c] == 0:
                             self.map[r + 1][c] = 2
                             self.map[r][c] = 0
-                            print((c, r))
                             # self.blocks[(c, r)].y += 1
                             # self.blocks[(c, r)], self.blocks[(c, r + 1)] = None, self.blocks[(c, r)]
                             # if self.blocks[(c, r + 1)] is not None:
@@ -62,8 +75,7 @@ class TetrisGame:
                             temp_block = self.blocks[(c, r)]
                             self.blocks[(c, r + 1)] = temp_block
                             self.blocks[(c, r)] = None
-                            if temp_block is not None:
-                                temp_block.y += 1
+                            temp_block.y += 1
     def render(self):
         self.check_for_completed_rows()
         self.draw_tiles()

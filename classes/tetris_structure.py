@@ -84,8 +84,9 @@ class Structure:
         if self.can_move:
             for block in self.outline_blocks:
                 block.render()
-        for block in self.blocks:
-            block.render()
+        if self.game.debug is False:
+            for block in self.blocks:
+                block.render()
 
     def move(self, p, q):
         if self.can_move and self.check_if_move_possible(p, q):
@@ -170,4 +171,5 @@ class Structure:
     def place(self):
         for block in self.blocks:
             self.game.map[block.y][block.x] = 2
+            self.game.blocks[(block.x, block.y)] = block
             block.moving = False

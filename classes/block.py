@@ -8,12 +8,10 @@ class Block:
         self.color = color
         self.border_color = border_color
         self.moving = True
-        self.destroyed = False
         self.game = game
         self.game.map[self.y][self.x] = 1
     def render(self):
-        print(self.moving)
-        if (self.game.map[self.y][self.x] != 0 or self.moving) and self.destroyed is False:
+        if self.game.map[self.y][self.x] != 0 or self.moving:
             rect = pygame.Rect(self.game.x_offset + self.x * self.game.tile_size, self.game.y_offset + self.y * self.game.tile_size,
                                self.game.tile_size, self.game.tile_size)
             pygame.draw.rect(self.game.app.screen, self.color, rect)
