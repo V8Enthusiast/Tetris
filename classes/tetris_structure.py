@@ -59,6 +59,8 @@ def generate_random_structure(x, y, game):
     for r, row in enumerate(template):
         for c, value in enumerate(row):
             if value == 1:
+                if game.map[y + r][x + c] == 2:
+                    game.game_over = True
                 tetris_block = block.Block(x + c, y + r, game, colors[color_idx], border_colors[color_idx])
                 blocks.append(tetris_block)
                 game.blocks[(x + c, y + r)] = tetris_block

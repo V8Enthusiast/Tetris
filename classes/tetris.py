@@ -10,6 +10,8 @@ class TetrisGame:
     def __init__(self, app, rows, columns):
         self.app = app
         self.score = 0
+        self.level = 1
+        self.lines_cleared = 0
         self.tile_color = (100, 100, 100)
         self.tile_outline_color = (40, 40, 40)
         self.ROWS = rows
@@ -33,8 +35,17 @@ class TetrisGame:
         self.moving_speed = 10
         self.accelerated_moving_speed = 20
         self.fps = 1
+        self.game_over = False
         self.debug = False
-
+    def reset_game(self):
+        self.blocks = {}
+        self.map = [[0 for _ in range(self.COLUMNS)] for i in range(self.ROWS)]
+        self.placed_structures = []
+        self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+        self.score = 0
+        self.level = 1
+        self.lines_cleared = 0
+        self.game_over = False
     def draw_tiles(self):
         for r_idx, r in enumerate(self.map):
             for c_idx, c in enumerate(r):
@@ -76,22 +87,34 @@ class TetrisGame:
                             self.blocks[(c, r + 1)] = temp_block
                             self.blocks[(c, r)] = None
                             temp_block.y += 1
+        self.lines_cleared += rows_cleared
+        if self.lines_cleared >= self.level * 10:
+            self.level += 1
+        print(f"Level: {self.level}")
+        print(f"Lines Cleared: {self.lines_cleared}")
     def render(self):
-        self.check_for_completed_rows()
-        self.draw_tiles()
-        if time.time() > self.clock + 1/self.fps or (self.move_down_faster and time.time() > self.clock + 1/self.accelerated_moving_speed):
-            self.current_structure.move(1, 0)
-            self.clock = time.time()
-        if self.move_right and time.time() > self.direction_clock + 1/self.moving_speed:
-            self.current_structure.move(0, 1)
-            self.direction_clock = time.time()
-        if self.move_left and time.time() > self.direction_clock + 1/self.moving_speed:
-            self.current_structure.move(0, -1)
-            self.direction_clock = time.time()
-        if self.current_structure.can_move is False:
-            self.placed_structures.append(self.current_structure)
-            self.current_structure.place()
-            self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+        if self.game_over:
+            self.draw_tiles()
+            game_over_font = pygame.font.SysFont('Impact', 148)  # You can choose another font and size
+            game_over_text = game_over_font.render("Game Over", True, (255, 255, 255))  # White color
+            text_rect = game_over_text.get_rect(center=(self.app.width // 2, self.app.height // 2))
+            self.app.screen.blit(game_over_text, text_rect)
+        else:
+            self.check_for_completed_rows()
+            self.draw_tiles()
+            if time.time() > self.clock + 1/self.fps or (self.move_down_faster and time.time() > self.clock + 1/self.accelerated_moving_speed):
+                self.current_structure.move(1, 0)
+                self.clock = time.time()
+            if self.move_right and time.time() > self.direction_clock + 1/self.moving_speed:
+                self.current_structure.move(0, 1)
+                self.direction_clock = time.time()
+            if self.move_left and time.time() > self.direction_clock + 1/self.moving_speed:
+                self.current_structure.move(0, -1)
+                self.direction_clock = time.time()
+            if self.current_structure.can_move is False:
+                self.placed_structures.append(self.current_structure)
+                self.current_structure.place()
+                self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
 
 
 
@@ -100,16 +123,19 @@ class TetrisGame:
             if event.type == pygame.QUIT:
                 self.app.run = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    self.move_down_faster = True
-                if event.key == pygame.K_UP:
-                    self.current_structure.rotate()
-                if event.key == pygame.K_SPACE:
-                    self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
-                if event.key == pygame.K_LEFT:
-                    self.move_left = True
-                if event.key == pygame.K_RIGHT:
-                    self.move_right = True
+                if self.game_over:
+                    self.reset_game()
+                else:
+                    if event.key == pygame.K_DOWN:
+                        self.move_down_faster = True
+                    if event.key == pygame.K_UP:
+                        self.current_structure.rotate()
+                    if event.key == pygame.K_SPACE:
+                        self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+                    if event.key == pygame.K_LEFT:
+                        self.move_left = True
+                    if event.key == pygame.K_RIGHT:
+                        self.move_right = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     self.move_down_faster = False
