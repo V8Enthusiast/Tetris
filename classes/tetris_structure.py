@@ -67,12 +67,12 @@ def generate_random_structure(x, y, game):
                 outline_blocks.append(block.Block(x + c, y + r, game, game.tile_color, colors[color_idx]))
 
     if center is not None:
-        return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]))
+        return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]), template_idx)
     else:
-        return Structure(game, blocks, outline_blocks, color_idx, None)
+        return Structure(game, blocks, outline_blocks, color_idx, None, template_idx)
 
 class Structure:
-    def __init__(self, game, blocks, outline_blocks, color_idx, center):
+    def __init__(self, game, blocks, outline_blocks, color_idx, center, template_idx):
         self.game = game
         self.blocks = blocks
         self.color_idx = color_idx
@@ -81,6 +81,7 @@ class Structure:
         self.can_move_right = True
         self.center = center
         self.outline_blocks = outline_blocks
+        self.template_idx = template_idx
 
     def render(self):
         if self.can_move:
@@ -89,6 +90,28 @@ class Structure:
         if self.game.debug is False:
             for block in self.blocks:
                 block.render()
+
+    def preview(self, x, y):
+        for block in self.blocks:
+            block.preview(x, y)
+
+    def reset(self, x, y):
+        self.blocks = []
+        self.outline_blocks = []
+        template = templates[self.template_idx]
+        self.center = centers[self.template_idx]
+        if self.center is not None:
+            self.center = (x + self.center[0], y + self.center[1])
+        for r, row in enumerate(template):
+            for c, value in enumerate(row):
+                if value == 1:
+                    if self.game.map[y + r][x + c] == 2:
+                        self.game.game_over = True
+                    tetris_block = block.Block(x + c, y + r, self.game, colors[self.color_idx], border_colors[self.color_idx])
+                    self.blocks.append(tetris_block)
+                    self.game.blocks[(x + c, y + r)] = tetris_block
+                    self.outline_blocks.append(block.Block(x + c, y + r, self.game, self.game.tile_color, colors[self.color_idx]))
+
 
     def move(self, p, q):
         if self.can_move and self.check_if_move_possible(p, q):

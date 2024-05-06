@@ -16,3 +16,9 @@ class Block:
                                self.game.tile_size, self.game.tile_size)
             pygame.draw.rect(self.game.app.screen, self.color, rect)
             pygame.draw.rect(self.game.app.screen, self.border_color, rect, self.game.border)
+    def preview(self, x, y):
+        rect = pygame.Rect(x + self.x * self.game.tile_size,
+                           y + self.y * self.game.tile_size,
+                           self.game.tile_size, self.game.tile_size)
+        pygame.draw.rect(self.game.app.screen, self.color, rect)
+        pygame.draw.rect(self.game.app.screen, self.border_color, rect, self.game.border)

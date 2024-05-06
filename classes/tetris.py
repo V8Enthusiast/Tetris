@@ -1,5 +1,5 @@
 import time
-
+from classes import tetris_widget
 import pygame
 from classes import tetris_structure
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
@@ -37,6 +37,11 @@ class TetrisGame:
         self.fps = 1
         self.game_over = False
         self.debug = False
+        self.next_structures = [tetris_structure.generate_random_structure(self.block_spawner_x, 0, self) for _ in range(3)]
+        self.next_structures_widget = tetris_widget.NextStructuresWidget(self, self.app, self.tile_color)
+        self.held_structure = None
+        self.hold_widget = tetris_widget.HoldWidget(self, self.app, self.tile_color)
+        self.can_swap = True
     def reset_game(self):
         self.blocks = {}
         self.map = [[0 for _ in range(self.COLUMNS)] for i in range(self.ROWS)]
@@ -46,6 +51,9 @@ class TetrisGame:
         self.level = 1
         self.lines_cleared = 0
         self.game_over = False
+        self.next_structures = [tetris_structure.generate_random_structure(self.block_spawner_x, 0, self) for _ in range(3)]
+        self.held_structure = None
+        self.can_swap = True
     def draw_tiles(self):
         for r_idx, r in enumerate(self.map):
             for c_idx, c in enumerate(r):
@@ -56,11 +64,19 @@ class TetrisGame:
         for structure in self.placed_structures:
             structure.render()
         self.current_structure.render()
+
+        ### UI ###
+
+        self.next_structures_widget.render()
+        self.hold_widget.render()
+
         score_font = pygame.font.SysFont('Impact', 24)
         level_surface = score_font.render(f"Level: {self.level}", True, (255, 255, 255))
         lines_surface = score_font.render(f"Lines Cleared: {self.lines_cleared}", True, (255, 255, 255))
         self.app.screen.blit(level_surface, (10, 10))
         self.app.screen.blit(lines_surface, (10, 40))
+
+        #########
 
         if self.debug:
             for block in self.blocks.values():
@@ -96,8 +112,8 @@ class TetrisGame:
         self.lines_cleared += rows_cleared
         if self.lines_cleared >= self.level * 10:
             self.level += 1
-        print(f"Level: {self.level}")
-        print(f"Lines Cleared: {self.lines_cleared}")
+        # print(f"Level: {self.level}")
+        # print(f"Lines Cleared: {self.lines_cleared}")
     def render(self):
         if self.game_over:
             self.draw_tiles()
@@ -120,7 +136,10 @@ class TetrisGame:
             if self.current_structure.can_move is False:
                 self.placed_structures.append(self.current_structure)
                 self.current_structure.place()
-                self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+                self.current_structure = self.next_structures[0]
+                self.can_swap = True
+                self.next_structures.pop(0)
+                self.next_structures.append(tetris_structure.generate_random_structure(self.block_spawner_x, 0, self))
 
 
 
@@ -136,8 +155,15 @@ class TetrisGame:
                         self.move_down_faster = True
                     if event.key == pygame.K_UP:
                         self.current_structure.rotate()
-                    if event.key == pygame.K_SPACE:
-                        self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+                    if event.key == pygame.K_SPACE and self.can_swap:
+                        if self.held_structure is not None:
+                            self.current_structure.reset(self.block_spawner_x, 0)
+                            self.current_structure, self.held_structure = self.held_structure, self.current_structure
+                        else:
+                            self.current_structure.reset(self.block_spawner_x, 0)
+                            self.held_structure = self.current_structure
+                            self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+                        self.can_swap = False
                     if event.key == pygame.K_LEFT:
                         self.move_left = True
                     if event.key == pygame.K_RIGHT:
