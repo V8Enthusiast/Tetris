@@ -12,7 +12,7 @@ class TetrisGame:
         self.score = 0
         self.level = 1
         self.lines_cleared = 0
-        self.tile_color = (100, 100, 100)
+        self.tile_color = (0, 0, 0)
         self.tile_outline_color = (40, 40, 40)
         self.ROWS = rows
         self.COLUMNS = columns
@@ -55,6 +55,7 @@ class TetrisGame:
         self.held_structure = None
         self.can_swap = True
     def draw_tiles(self):
+        self.app.screen.fill((40, 40, 40))
         for r_idx, r in enumerate(self.map):
             for c_idx, c in enumerate(r):
                 rect = pygame.Rect(self.x_offset + c_idx * self.tile_size, self.y_offset + r_idx * self.tile_size, self.tile_size, self.tile_size)
