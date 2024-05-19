@@ -214,12 +214,12 @@ def generate_random_structure(x, y, game, template_idx=None):
                 outline_blocks.append(block.Block(x + c, y + r, game, game.tile_color, color))
 
     if center is not None:
-        return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]), template_idx)
+        return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]), template_idx, color, border_color)
     else:
-        return Structure(game, blocks, outline_blocks, color_idx, None, template_idx)
+        return Structure(game, blocks, outline_blocks, color_idx, None, template_idx, color, border_color)
 
 class Structure:
-    def __init__(self, game, blocks, outline_blocks, color_idx, center, template_idx):
+    def __init__(self, game, blocks, outline_blocks, color_idx, center, template_idx, color, border_color):
         self.game = game
         self.blocks = blocks
         self.color_idx = color_idx
@@ -229,6 +229,8 @@ class Structure:
         self.center = center
         self.outline_blocks = outline_blocks
         self.template_idx = template_idx
+        self.color = color
+        self.border_color = border_color
 
     def render(self):
         if self.can_move:
@@ -254,10 +256,10 @@ class Structure:
                 if value == 1:
                     if self.game.map[y + r][x + c] == 2:
                         self.game.game_over = True
-                    tetris_block = block.Block(x + c, y + r, self.game, colors[self.color_idx], border_colors[self.color_idx])
+                    tetris_block = block.Block(x + c, y + r, self.game, self.color, self.border_color)
                     self.blocks.append(tetris_block)
                     self.game.blocks[(x + c, y + r)] = tetris_block
-                    self.outline_blocks.append(block.Block(x + c, y + r, self.game, self.game.tile_color, colors[self.color_idx]))
+                    self.outline_blocks.append(block.Block(x + c, y + r, self.game, self.game.tile_color, self.color))
 
 
     def move(self, p, q):
