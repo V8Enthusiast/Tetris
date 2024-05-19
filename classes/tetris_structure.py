@@ -2,6 +2,7 @@ import random
 from copy import deepcopy
 
 from classes import block
+import settings_values
 import pygame
 
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
@@ -64,7 +65,19 @@ def generate_bag(x, y, game, random_x_coord=False):
 def generate_random_structure(x, y, game, template_idx=None):
     blocks = []
     outline_blocks = []
-    color_idx = random.randrange(len(colors))
+    print(settings_values.block_colors)
+    if settings_values.block_colors == 0:
+        color_idx = random.randrange(len(colors))
+        color = colors[color_idx]
+        border_color = border_colors[color_idx]
+    elif settings_values.block_colors == 1:
+        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        border_color = (0, 0, 0)
+        color_idx = None
+    else:
+        color = (40, 40, 40)
+        border_color = (90, 90, 90)
+        color_idx = None
     if template_idx is None:
         template_idx = random.randrange(len(templates))
     template = templates[template_idx]
@@ -74,10 +87,10 @@ def generate_random_structure(x, y, game, template_idx=None):
             if value == 1:
                 if game.map[y + r][x + c] == 2:
                     game.game_over = True
-                tetris_block = block.Block(x + c, y + r, game, colors[color_idx], border_colors[color_idx])
+                tetris_block = block.Block(x + c, y + r, game, color, border_color)
                 blocks.append(tetris_block)
                 game.blocks[(x + c, y + r)] = tetris_block
-                outline_blocks.append(block.Block(x + c, y + r, game, game.tile_color, colors[color_idx]))
+                outline_blocks.append(block.Block(x + c, y + r, game, game.tile_color, color))
 
     if center is not None:
         return Structure(game, blocks, outline_blocks, color_idx, (x + center[0], y + center[1]), template_idx)

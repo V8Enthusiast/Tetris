@@ -1,6 +1,6 @@
 import pygame
 from classes import buttons
-
+import settings_values
 class LevelSelect:
     def __init__(self, app):
         self.app = app
@@ -8,7 +8,7 @@ class LevelSelect:
         self.font = "fonts/main_font.ttf"
         self.arrow_font = "fonts/arrows.ttf" # character map: https://www.1001fonts.com/pizzadude-pointers-font.html
         self.font_color = (255, 255, 255)
-        self.selected_level = 1
+        self.selected_level = settings_values.default_level
         self.buttons = [buttons.Button(100 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 200 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.arrow_font, "Q", (0, 0, 0), self.font_color, 'minus', self.app), buttons.Button(100 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.arrow_font, "U", (0, 0, 0), self.font_color, 'plus', self.app), buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 100 * self.app.scale, self.app.height/2 + 150 * self.app.scale/2, False, self.font, "Start", (0, 0, 0), self.font_color, 'start_game', self.app)]
 
     def render(self):

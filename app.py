@@ -1,27 +1,36 @@
-import pygame
+import pygame, json
 from classes import mainmenu
-
+import settings_values
+resolutions = ["1000x800", "1200x900", "1920x1080", "2560x1440"]
 class App:
     def __init__(self, width, height, fullscreen, vsync):
+        with open('settings.json', 'r') as file:
+            data = json.load(file)
+            settings = data['settings']
+        settings_values.gamemode = settings['Gamemode']
+        settings_values.default_level = settings['Default level']
+        settings_values.block_colors = settings['Block colors']
+        settings_values.max_fall_speed = settings['Max fall speed']
+
+        print(settings_values.block_colors)
         # Save the data passed into the function to variables
         self.clock = pygame.time.Clock()
         self.fps = 60
-        self.width = width
-        self.height = height
+        self.width = int(resolutions[settings['Resolution']].split('x')[0])
+        self.height = int(resolutions[settings['Resolution']].split('x')[1])
         self.is_FS_enabled = fullscreen
         self.is_vsync_enabled = vsync
         self.scale = 1
         self.ui = mainmenu.MainMenu(self)
-        self.isUserMovingPiece = False
 
         # Initialize pygame
         pygame.init()
 
         # Window setup
         if fullscreen:
-            self.screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN, vsync=int(vsync))
+            self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN, vsync=int(vsync))
         else:
-            self.screen = pygame.display.set_mode((width, height), vsync=int(vsync))
+            self.screen = pygame.display.set_mode((self.width, self.height), vsync=int(vsync))
 
         self.run = True # Variable to determine if the app is running
 

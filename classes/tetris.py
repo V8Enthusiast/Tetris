@@ -1,4 +1,6 @@
 import time
+
+import settings_values
 from classes import tetris_widget
 import pygame
 from classes import tetris_structure
@@ -34,7 +36,7 @@ class TetrisGame:
         self.move_right = False
         self.moving_speed = 10
         self.accelerated_moving_speed = 20
-        self.fps = self.level
+        self.fps = min(self.level, settings_values.max_fall_speed)
         self.game_over = False
         self.debug = False
         #self.next_structures = [tetris_structure.generate_random_structure(self.block_spawner_x, 0, self) for _ in range(3)]
@@ -127,7 +129,7 @@ class TetrisGame:
         self.lines_cleared += rows_cleared
         if self.lines_cleared >= self.level * 10:
             self.level += 1
-            self.fps = self.level
+            self.fps = min(self.level, settings_values.max_fall_speed)
         # print(f"Level: {self.level}")
         # print(f"Lines Cleared: {self.lines_cleared}")
     def render(self):
