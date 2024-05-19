@@ -72,10 +72,12 @@ class TetrisGame:
         self.hold_widget.render()
 
         score_font = pygame.font.SysFont('Impact', 24)
+        score_surface = score_font.render(f"Score: {self.score}", True, (255, 255, 255))
         level_surface = score_font.render(f"Level: {self.level}", True, (255, 255, 255))
         lines_surface = score_font.render(f"Lines Cleared: {self.lines_cleared}", True, (255, 255, 255))
-        self.app.screen.blit(level_surface, (10, 10))
-        self.app.screen.blit(lines_surface, (10, 40))
+        self.app.screen.blit(score_surface, (10, 10))
+        self.app.screen.blit(level_surface, (10, 40))
+        self.app.screen.blit(lines_surface, (10, 70))
 
         #########
 
@@ -110,9 +112,18 @@ class TetrisGame:
                             self.blocks[(c, r + 1)] = temp_block
                             self.blocks[(c, r)] = None
                             temp_block.y += 1
+        if rows_cleared == 1:
+            self.score += 40 * (self.level + 1)
+        if rows_cleared == 2:
+            self.score += 100 * (self.level + 1)
+        if rows_cleared == 3:
+            self.score += 300 * (self.level + 1)
+        if rows_cleared == 4:
+            self.score += 1200 * (self.level + 1)
         self.lines_cleared += rows_cleared
         if self.lines_cleared >= self.level * 10:
             self.level += 1
+            self.fps = self.level
         # print(f"Level: {self.level}")
         # print(f"Lines Cleared: {self.lines_cleared}")
     def render(self):
