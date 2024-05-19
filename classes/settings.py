@@ -18,7 +18,7 @@ class Settings:
         print(settings)
         self.buttons = [buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 575 * self.app.scale/2, False, self.font, f"{resolutions[settings['Resolution']]}", (0, 0, 0), self.font_color, 'resolution', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 375 * self.app.scale/2, False, self.font, f"{settings['Fullscreen']}", (0, 0, 0), self.font_color, 'fullscreen', self.app),
-                        buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 175 * self.app.scale/2, False, self.font, f"{gamemodes[settings['Gamemode']]}", (0, 0, 0), self.font_color, 'gamemode', self.app),
+                        buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 175 * self.app.scale/2, False, self.font, f"{gamemodes[settings['Gamemode']]}", (0, 0, 0), self.font_color, 'mode', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 + 25 * self.app.scale/2, False, self.font, f"{settings['Default level']}", (0, 0, 0), self.font_color, 'level', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 + 225 * self.app.scale/2, False, self.font, f"{color_modes[settings['Block colors']]}", (0, 0, 0), self.font_color, 'colors', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 + 425 * self.app.scale/2, False, self.font, f"{settings['Max fall speed']}", (0, 0, 0), self.font_color, 'speed', self.app),
@@ -77,7 +77,7 @@ class Settings:
             self.screen = pygame.display.set_mode((width, height), vsync=int(self.app.is_vsync_enabled))
         self.app.width = width
         self.app.height = height
-        settings_values.gamemode = settings['Gamemode']
+        settings_values.mode = settings['Gamemode']
         settings_values.default_level = settings['Default level']
         settings_values.block_colors = settings['Block colors']
         settings_values.max_fall_speed = settings['Max fall speed']
@@ -92,7 +92,7 @@ class Settings:
                            f"{settings['Fullscreen']}", (0, 0, 0), self.font_color, 'fullscreen', self.app),
             buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width / 2 + 100 * self.app.scale,
                            self.app.height / 2 - 175 * self.app.scale / 2, False, self.font,
-                           f"{gamemodes[settings['Gamemode']]}", (0, 0, 0), self.font_color, 'gamemode', self.app),
+                           f"{gamemodes[settings['Gamemode']]}", (0, 0, 0), self.font_color, 'mode', self.app),
             buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width / 2 + 100 * self.app.scale,
                            self.app.height / 2 + 25 * self.app.scale / 2, False, self.font,
                            f"{settings['Default level']}", (0, 0, 0), self.font_color, 'level', self.app),

@@ -79,7 +79,7 @@ class Button:
             else:
                 self.app.ui.current_fs = "False"
             self.text = self.app.ui.current_fs
-        elif self.function == 'gamemode':
+        elif self.function == 'mode':
             if self.app.ui.current_gamemode < len(gamemodes) - 1:
                 self.app.ui.current_gamemode += 1
             else:

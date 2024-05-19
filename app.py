@@ -7,12 +7,12 @@ class App:
         with open('settings.json', 'r') as file:
             data = json.load(file)
             settings = data['settings']
-        settings_values.gamemode = settings['Gamemode']
+        settings_values.mode = settings['Gamemode']
         settings_values.default_level = settings['Default level']
         settings_values.block_colors = settings['Block colors']
         settings_values.max_fall_speed = settings['Max fall speed']
 
-        print(settings_values.block_colors)
+        print(f"{settings_values.mode} xd")
         # Save the data passed into the function to variables
         self.clock = pygame.time.Clock()
         self.fps = 60

@@ -1,4 +1,5 @@
-gamemode = 1
-default_level = 1
-block_colors = 0
-max_fall_speed = 5
+temp = None
+mode = None
+default_level = None
+block_colors = None
+max_fall_speed = None

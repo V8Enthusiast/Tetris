@@ -1,4 +1,4 @@
-import random
+import random, json
 from copy import deepcopy
 
 from classes import block
@@ -7,53 +7,175 @@ import pygame
 
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
 border_colors = [(105,206,244), (178,206,230), (248,187,117), (251,249,200), (213,234,188), (155,119,183), (242,109,114)]
+def get_template():
+    if settings_values.mode == 2:
+        return [
+            [
+                [0, 1, 1],
+                [1, 1, 0],
+                [0, 1, 0]
+            ],
+            [
+                [1, 1, 0],
+                [0, 1, 1],
+                [0, 1, 0]
+            ],
+            [
+                [0, 1, 0],
+                [1, 1, 1],
+                [0, 1, 0]
+            ],
+            [
+                [1, 0, 0, 0],
+                [1, 1, 1, 1]
+            ],
+            [
+                [0, 0, 0, 1],
+                [1, 1, 1, 1]
+            ],
+            [
+                [1, 1, 1],
+                [0, 1, 0],
+                [0, 1, 0]
+            ],
+            [
+                [1, 0, 1],
+                [1, 1, 1]
+            ],
+            [
+                [1, 1, 1],
+                [1, 1, 0]
+            ],
+            [
+                [1, 1, 0],
+                [1, 1, 1]
+            ],
+            [
+                [0, 0, 1],
+                [0, 0, 1],
+                [1, 1, 1]
+            ],
+            [
+                [0, 0, 1],
+                [0, 1, 1],
+                [1, 1, 0]
+            ],
+            [
+                [1, 1, 1, 0],
+                [0, 0, 1, 1]
+            ],
+            [
+                [0, 1, 1, 1],
+                [1, 1, 0, 0]
+            ],
+            [
+                [0, 0, 1, 0],
+                [1, 1, 1, 1]
+            ],
+            [
+                [0, 1, 0, 0],
+                [1, 1, 1, 1]
+            ],
+            [
+                [1, 1, 1, 1, 1]
+            ],
+            [
+                [0, 1, 1],
+                [0, 1, 0],
+                [1, 1, 0]
+            ],
+            [
+                [1, 1, 0],
+                [0, 1, 0],
+                [0, 1, 1]
+            ]
+        ]
 
-templates = [
-    [
-        [0, 1, 0],
-        [1, 1, 1]
-    ],
-    [
-        [1, 0, 0],
-        [1, 1, 1]
-    ],
-    [
-        [0, 0, 1],
-        [1, 1, 1]
-    ],
-    [
-        [1, 1],
-        [1, 1]
-    ],
-    [
-        [1, 1, 0],
-        [0, 1, 1]
-    ],
-    [
-        [0, 1, 1],
-        [1, 1, 0]
-    ],
-    [
-        [1, 1, 1, 1]
-    ]
-]
+    elif settings_values.mode == 0:
+        return [
+            [
+                [0, 1],
+                [1, 1]
+            ],
+            [
+                [1, 1, 1]
+            ]
+        ]
+    else:
+        return [
+            [
+                [0, 1, 0],
+                [1, 1, 1]
+            ],
+            [
+                [1, 0, 0],
+                [1, 1, 1]
+            ],
+            [
+                [0, 0, 1],
+                [1, 1, 1]
+            ],
+            [
+                [1, 1],
+                [1, 1]
+            ],
+            [
+                [1, 1, 0],
+                [0, 1, 1]
+            ],
+            [
+                [0, 1, 1],
+                [1, 1, 0]
+            ],
+            [
+                [1, 1, 1, 1]
+            ]
+        ]
 
-centers = [
-    (1, 1),
-    (1, 1),
-    (1, 1),
-    None,
-    (1, 1),
-    (1, 1),
-    (1, 0)
+def get_centers():
+    if settings_values.mode == 2:
+        return [
+            (1, 1),
+            (1, 1),
+            None,
+            (1, 1),
+            (2, 1),
+            (1, 1),
+            (1, 1),
+            (1, 1),
+            (1, 0),
+            (1, 1),
+            (1, 1),
+            (2, 0),
+            (1, 0),
+            (2, 1),
+            (1, 1),
+            (2, 0),
+            (1, 1),
+            (1, 1)
 
-]
+        ]
+    elif settings_values.mode == 0:
+        return [
+            (1, 1),
+            (1, 0),
+        ]
+    else:
+        return [
+            (1, 1),
+            (1, 1),
+            (1, 1),
+            None,
+            (1, 1),
+            (1, 1),
+            (1, 0)
 
+        ]
 def generate_bag(x, y, game, random_x_coord=False):
     bag = []
-    available_templates = [i for i in range(len(templates))]
+    available_templates = [i for i in range(len(get_template()))]
     while len(available_templates) != 0:
-        template_idx = random.randrange(len(templates))
+        template_idx = random.randrange(len(get_template()))
         if template_idx in available_templates:
             if random_x_coord:
                 bag.append(generate_random_structure(random.randint(0, game.COLUMNS - 4), y, game, template_idx=template_idx))
@@ -65,7 +187,6 @@ def generate_bag(x, y, game, random_x_coord=False):
 def generate_random_structure(x, y, game, template_idx=None):
     blocks = []
     outline_blocks = []
-    print(settings_values.block_colors)
     if settings_values.block_colors == 0:
         color_idx = random.randrange(len(colors))
         color = colors[color_idx]
@@ -79,9 +200,9 @@ def generate_random_structure(x, y, game, template_idx=None):
         border_color = (90, 90, 90)
         color_idx = None
     if template_idx is None:
-        template_idx = random.randrange(len(templates))
-    template = templates[template_idx]
-    center = centers[template_idx]
+        template_idx = random.randrange(len(get_template()))
+    template = get_template()[template_idx]
+    center = get_centers()[template_idx]
     for r, row in enumerate(template):
         for c, value in enumerate(row):
             if value == 1:
@@ -124,8 +245,8 @@ class Structure:
     def reset(self, x, y):
         self.blocks = []
         self.outline_blocks = []
-        template = templates[self.template_idx]
-        self.center = centers[self.template_idx]
+        template = get_template()[self.template_idx]
+        self.center = get_centers()[self.template_idx]
         if self.center is not None:
             self.center = (x + self.center[0], y + self.center[1])
         for r, row in enumerate(template):
@@ -168,7 +289,13 @@ class Structure:
                 y += 1
             y -= 1
 
-            for block_idx in range(4):
+            if settings_values.mode == 0:
+                block_num = 3
+            elif settings_values.mode == 2:
+                block_num = 5
+            else:
+                block_num = 4
+            for block_idx in range(block_num):
                 outline_y = self.blocks[block_idx].y + y
                 if outline_y < self.game.ROWS:
                     self.outline_blocks[block_idx].y = outline_y
