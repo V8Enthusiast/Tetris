@@ -77,13 +77,13 @@ class TetrisGame:
         self.next_structures_widget.render()
         self.hold_widget.render()
 
-        score_font = pygame.font.SysFont('Impact', 24)
-        score_surface = score_font.render(f"Score: {self.score}", True, (255, 255, 255))
-        level_surface = score_font.render(f"Level: {self.level}", True, (255, 255, 255))
-        lines_surface = score_font.render(f"Lines Cleared: {self.lines_cleared}", True, (255, 255, 255))
-        self.app.screen.blit(score_surface, (10, 10))
-        self.app.screen.blit(level_surface, (10, 40))
-        self.app.screen.blit(lines_surface, (10, 70))
+        score_font = pygame.font.Font(self.font, 48)
+        score_surface = score_font.render(f"Score:  {self.score}", True, (255, 255, 255))
+        level_surface = score_font.render(f"Level:  {self.level}", True, (255, 255, 255))
+        lines_surface = score_font.render(f"Rows:  {self.lines_cleared}", True, (255, 255, 255))
+        self.app.screen.blit(score_surface, (75 * self.app.scale, self.app.height/2 + 25 * self.app.scale/2))
+        self.app.screen.blit(level_surface, (75 * self.app.scale, self.app.height/2 + 225 * self.app.scale/2))
+        self.app.screen.blit(lines_surface, (75 * self.app.scale, self.app.height/2 + 425 * self.app.scale/2))
 
         #########
 
