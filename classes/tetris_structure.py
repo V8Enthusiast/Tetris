@@ -48,12 +48,25 @@ centers = [
 
 ]
 
-def generate_random_structure(x, y, game):
+def generate_bag(x, y, game, random_x_coord=False):
+    bag = []
+    available_templates = [i for i in range(len(templates))]
+    while len(available_templates) != 0:
+        template_idx = random.randrange(len(templates))
+        if template_idx in available_templates:
+            if random_x_coord:
+                bag.append(generate_random_structure(random.randint(0, game.COLUMNS - 4), y, game, template_idx=template_idx))
+            else:
+                bag.append(generate_random_structure(x, y, game, template_idx=template_idx))
+            available_templates.remove(template_idx)
+    return bag
+
+def generate_random_structure(x, y, game, template_idx=None):
     blocks = []
     outline_blocks = []
     color_idx = random.randrange(len(colors))
-
-    template_idx = random.randrange(len(templates))
+    if template_idx is None:
+        template_idx = random.randrange(len(templates))
     template = templates[template_idx]
     center = centers[template_idx]
     for r, row in enumerate(template):

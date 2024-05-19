@@ -30,20 +30,21 @@ class MainMenu:
         self.y_offset = (self.app.height - self.tile_size * self.ROWS) / 2
         self.block_spawner_x = self.COLUMNS // 2 - 2
         self.placed_structures = []
-        self.structure_amount = 5
-        self.current_structures = [tetris_structure.generate_random_structure(random.randint(0, self.COLUMNS - 4), 0, self)]
+        self.structure_amount = 4
         self.clock = time.time()
         self.direction_clock = time.time()
         self.move_down_faster = False
         self.move_left = False
         self.move_right = False
         self.moving_speed = 40
-        self.fps = 5
+        self.fps = 6
         self.game_over = False
         self.debug = False
-        self.next_structures = [tetris_structure.generate_random_structure(random.randint(0, self.COLUMNS - 4), 0, self) for _ in range(3)]
+        self.next_structures = tetris_structure.generate_bag(0, 0, self, random_x_coord=True)
+        self.current_structures = [self.next_structures[0]]
+        self.next_structures.pop(0)
         self.held_structure = None
-        self.delay_between_blocks = 6
+        self.delay_between_blocks = 5
         self.current_delay = 0
 
 
@@ -62,12 +63,16 @@ class MainMenu:
                 self.current_structures.append(self.next_structures[0])
                 self.can_swap = True
                 self.next_structures.pop(0)
-                self.next_structures.append(tetris_structure.generate_random_structure(random.randint(1, self.COLUMNS - 4), 0, self))
+                if len(self.next_structures) <= 3:
+                    self.next_structures += tetris_structure.generate_bag(0, 0, self, random_x_coord=True)
         if moved:
             self.clock = current_time
             if self.current_delay >= self.delay_between_blocks:
                 if len(self.current_structures) < self.structure_amount:
-                    self.current_structures.append(tetris_structure.generate_random_structure(random.randint(0, self.COLUMNS - 4), 0, self))
+                    self.current_structures.append(self.next_structures[0])
+                    self.next_structures.pop(0)
+                    if len(self.next_structures) <= 3:
+                        self.next_structures += tetris_structure.generate_bag(0, 0, self, random_x_coord=True)
                 self.current_delay = 0
             else:
                 self.current_delay += 1

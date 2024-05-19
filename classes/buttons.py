@@ -1,6 +1,5 @@
 import random
-from classes import tetris
-from classes import settings
+from classes import settings, tetris, levelselect
 import pygame
 
 import pygame
@@ -49,10 +48,18 @@ class Button:
         self.app.screen.blit(self.display_text, self.display_text_rect)
     def click(self):
         if self.function == 'start':
-            self.app.ui = tetris.TetrisGame(self.app, 20, 10) # Change the displayed ui to the simulation
+            self.app.ui = levelselect.LevelSelect(self.app)
+            #self.app.ui = tetris.TetrisGame(self.app, 20, 10) # Change the displayed ui to the simulation
+        elif self.function == 'start_game':
+            level = self.app.ui.selected_level
+            self.app.ui = tetris.TetrisGame(self.app, 20, 10, level)  # Change the displayed ui to the simulation
         elif self.function == 'settings':
             self.app.ui = settings.Settings(self.app)
         elif self.function == 'save_score':
             print("Saved score")
+        elif self.function == 'plus':
+            self.app.ui.add()
+        elif self.function == 'minus':
+            self.app.ui.subtract()
         else:
             self.bgcolor = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))

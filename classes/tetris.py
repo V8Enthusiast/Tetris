@@ -7,10 +7,10 @@ colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (1
 pygame.font.init()
 font = pygame.font.Font(None, 24)
 class TetrisGame:
-    def __init__(self, app, rows, columns):
+    def __init__(self, app, rows, columns, start_level):
         self.app = app
         self.score = 0
-        self.level = 1
+        self.level = start_level
         self.lines_cleared = 0
         self.tile_color = (0, 0, 0)
         self.tile_outline_color = (40, 40, 40)
@@ -25,7 +25,7 @@ class TetrisGame:
         self.y_offset = (self.app.height - self.tile_size * self.ROWS) / 2
         self.block_spawner_x = self.COLUMNS // 2 - 2
         self.placed_structures = []
-        self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
+        #self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
         pygame.mouse.set_pos(self.x_offset + self.block_spawner_x * self.tile_size, self.y_offset + self.app.height/2)
         self.clock = time.time()
         self.direction_clock = time.time()
@@ -34,10 +34,13 @@ class TetrisGame:
         self.move_right = False
         self.moving_speed = 10
         self.accelerated_moving_speed = 20
-        self.fps = 1
+        self.fps = self.level
         self.game_over = False
         self.debug = False
-        self.next_structures = [tetris_structure.generate_random_structure(self.block_spawner_x, 0, self) for _ in range(3)]
+        #self.next_structures = [tetris_structure.generate_random_structure(self.block_spawner_x, 0, self) for _ in range(3)]
+        self.next_structures = tetris_structure.generate_bag(self.block_spawner_x, 0, self)
+        self.current_structure = self.next_structures[0]
+        self.next_structures.pop(0)
         self.next_structures_widget = tetris_widget.NextStructuresWidget(self, self.app, self.tile_color)
         self.held_structure = None
         self.hold_widget = tetris_widget.HoldWidget(self, self.app, self.tile_color)
@@ -46,12 +49,13 @@ class TetrisGame:
         self.blocks = {}
         self.map = [[0 for _ in range(self.COLUMNS)] for i in range(self.ROWS)]
         self.placed_structures = []
-        self.current_structure = tetris_structure.generate_random_structure(self.block_spawner_x, 0, self)
         self.score = 0
         self.level = 1
         self.lines_cleared = 0
         self.game_over = False
-        self.next_structures = [tetris_structure.generate_random_structure(self.block_spawner_x, 0, self) for _ in range(3)]
+        self.next_structures = self.next_structures = tetris_structure.generate_bag(self.block_spawner_x, 0, self)
+        self.current_structure = self.next_structures[0]
+        self.next_structures.pop(0)
         self.held_structure = None
         self.can_swap = True
     def draw_tiles(self):
@@ -151,7 +155,8 @@ class TetrisGame:
                 self.current_structure = self.next_structures[0]
                 self.can_swap = True
                 self.next_structures.pop(0)
-                self.next_structures.append(tetris_structure.generate_random_structure(self.block_spawner_x, 0, self))
+                if len(self.next_structures) <= 3:
+                    self.next_structures += tetris_structure.generate_bag(self.block_spawner_x, 0, self)
 
 
 
