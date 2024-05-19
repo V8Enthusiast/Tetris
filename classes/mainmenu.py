@@ -21,9 +21,9 @@ class MainMenu:
         self.ROWS = 20
         self.COLUMNS = int(self.app.width // (self.app.height/self.ROWS)) + 1
         self.blocks = {}
-        self.map = [[0 for _ in range(self.COLUMNS)] for i in range(self.ROWS + 5)]
+        self.map = [[0 for _ in range(self.COLUMNS)] for i in range(self.ROWS + 7)]
         self.tile_size = self.app.height/self.ROWS
-        self.ROWS += 5
+        self.ROWS += 7
 
         self.border = 1
         self.x_offset = (self.app.width - self.tile_size * self.COLUMNS) / 2

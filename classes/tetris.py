@@ -1,9 +1,7 @@
-import time
-
 import settings_values
-from classes import tetris_widget
+from classes import tetris_widget, tetris_structure, buttons
 import pygame
-from classes import tetris_structure
+import time
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
 
 pygame.font.init()
@@ -18,7 +16,9 @@ class TetrisGame:
         self.tile_outline_color = (40, 40, 40)
         self.ROWS = rows
         self.COLUMNS = columns
-        self.buttons = []
+        self.font = "fonts/main_font.ttf"
+        self.font_color = (255, 255, 255)
+        self.buttons = [buttons.Button(250 * self.app.scale, 75 * self.app.scale, 55 * self.app.scale, self.app.height - 175 * self.app.scale/2, False, self.font, "Back to menu", (0, 0, 0), self.font_color, 'back_to_menu', self.app)]
         self.blocks = {}
         self.map = [[0 for _ in range(columns)] for i in range(rows)]
         self.tile_size = self.app.height/self.ROWS
@@ -159,6 +159,8 @@ class TetrisGame:
                 self.next_structures.pop(0)
                 if len(self.next_structures) <= 3:
                     self.next_structures += tetris_structure.generate_bag(self.block_spawner_x, 0, self)
+        for button in self.buttons:
+            button.render()
 
 
 
@@ -194,4 +196,9 @@ class TetrisGame:
                     self.move_left = False
                 if event.key == pygame.K_RIGHT:
                     self.move_right = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                click_pos = pygame.mouse.get_pos()
+                for button in self.buttons:
+                    if button.rect.collidepoint(click_pos[0], click_pos[1]):
+                        button.click()
 

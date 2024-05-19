@@ -105,7 +105,7 @@ class Button:
             self.text = str(self.app.ui.current_fall_speed)
         elif self.function == 'save_settings':
             self.app.ui.save()
-        elif self.function == 'exit_settings':
+        elif self.function == 'back_to_menu':
             self.app.ui = mainmenu.MainMenu(self.app)
         else:
             self.bgcolor = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))

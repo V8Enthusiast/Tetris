@@ -107,7 +107,7 @@ class Settings:
                            self.font_color, 'save_settings', self.app),
             buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width / 2 + 25 * self.app.scale,
                            self.app.height / 2 + 625 * self.app.scale / 2, False, self.font, "Exit", (0, 0, 0),
-                           self.font_color, 'exit_settings', self.app)]
+                           self.font_color, 'back_to_menu', self.app)]
 
     def read_settings(self, file_path):
         with open(file_path, 'r') as file:

@@ -9,7 +9,10 @@ class LevelSelect:
         self.arrow_font = "fonts/arrows.ttf" # character map: https://www.1001fonts.com/pizzadude-pointers-font.html
         self.font_color = (255, 255, 255)
         self.selected_level = settings_values.default_level
-        self.buttons = [buttons.Button(100 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 200 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.arrow_font, "Q", (0, 0, 0), self.font_color, 'minus', self.app), buttons.Button(100 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.arrow_font, "U", (0, 0, 0), self.font_color, 'plus', self.app), buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 100 * self.app.scale, self.app.height/2 + 150 * self.app.scale/2, False, self.font, "Start", (0, 0, 0), self.font_color, 'start_game', self.app)]
+        self.buttons = [buttons.Button(100 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 200 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.arrow_font, "Q", (0, 0, 0), self.font_color, 'minus', self.app),
+                        buttons.Button(100 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.arrow_font, "U", (0, 0, 0), self.font_color, 'plus', self.app),
+                        buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 100 * self.app.scale, self.app.height/2 + 150 * self.app.scale/2, False, self.font, "Start", (0, 0, 0), self.font_color, 'start_game', self.app),
+                        buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 100 * self.app.scale, self.app.height/2 + 350 * self.app.scale/2, False, self.font, "Back", (0, 0, 0), self.font_color, 'back_to_menu', self.app)]
 
     def render(self):
         self.app.screen.fill((0, 0, 0))
