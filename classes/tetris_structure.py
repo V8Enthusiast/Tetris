@@ -1,7 +1,5 @@
-import random, json
-from copy import deepcopy
-
-from classes import block
+import random
+from classes import block, particles
 import settings_values
 import pygame
 
@@ -350,6 +348,11 @@ class Structure:
 
     def place(self):
         for block in self.blocks:
+            for _ in range(20):
+                speed = random.randint(60, 300)
+                direction = pygame.math.Vector2(0, -1)
+                self.game.particles.add(particles.Particle(self.game.particles, (random.uniform(-self.game.tile_size/2, self.game.tile_size/2) + self.game.x_offset + block.x * self.game.tile_size + self.game.tile_size/2, random.uniform(-self.game.tile_size/2, self.game.tile_size/2) + block.y * self.game.tile_size + self.game.tile_size/2), self.color, direction, speed))
+
             self.game.map[block.y][block.x] = 2
             self.game.blocks[(block.x, block.y)] = block
             block.moving = False

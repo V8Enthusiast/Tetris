@@ -23,7 +23,7 @@ class Settings:
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 + 225 * self.app.scale/2, False, self.font, f"{color_modes[settings['Block colors']]}", (0, 0, 0), self.font_color, 'colors', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 + 425 * self.app.scale/2, False, self.font, f"{settings['Max fall speed']}", (0, 0, 0), self.font_color, 'speed', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 225 * self.app.scale, self.app.height/2 + 625 * self.app.scale/2, False, self.font, "Save", (0, 0, 0), self.font_color, 'save_settings', self.app),
-                        buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 25 * self.app.scale, self.app.height/2 + 625 * self.app.scale/2, False, self.font, "Exit", (0, 0, 0), self.font_color, 'exit_settings', self.app)]
+                        buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 25 * self.app.scale, self.app.height/2 + 625 * self.app.scale/2, False, self.font, "Exit", (0, 0, 0), self.font_color, 'back_to_menu', self.app)]
         font = pygame.font.Font(self.font, int(48 * self.app.scale))
         self.texts = [font.render("Resolution", True, self.font_color),
                       font.render("Fullscreen", True, self.font_color),

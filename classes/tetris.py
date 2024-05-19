@@ -1,6 +1,6 @@
 import settings_values
-from classes import tetris_widget, tetris_structure, buttons
-import pygame
+from classes import tetris_widget, tetris_structure, buttons, particles, block
+import pygame, random
 import time
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
 
@@ -47,6 +47,8 @@ class TetrisGame:
         self.held_structure = None
         self.hold_widget = tetris_widget.HoldWidget(self, self.app, self.tile_color)
         self.can_swap = True
+        self.particles = pygame.sprite.Group()
+        self.particle_clock = pygame.time.Clock()
     def reset_game(self):
         self.blocks = {}
         self.map = [[0 for _ in range(self.COLUMNS)] for i in range(self.ROWS)]
@@ -105,6 +107,15 @@ class TetrisGame:
                 rows_cleared += 1
                 for i in range(self.COLUMNS):
                     self.map[row_id][i] = 0
+                    for _ in range(20):
+                        speed = random.randint(60, 300)
+                        direction = pygame.math.Vector2(0, -1)
+                        self.particles.add(particles.Particle(self.particles, (
+                        random.uniform(-self.tile_size / 2,
+                                       self.tile_size / 2) + self.x_offset + i * self.tile_size + self.tile_size / 2,
+                        random.uniform(-self.tile_size / 2,
+                                       self.tile_size / 2) + row_id * self.tile_size + self.tile_size / 2),
+                                                                   (255, 255, 255), direction, speed))
                 for r in range(row_id, -1, -1):
                     for c in range(self.COLUMNS):
                         if self.map[r][c] == 2 and self.map[r + 1][c] == 0:
@@ -161,6 +172,9 @@ class TetrisGame:
                     self.next_structures += tetris_structure.generate_bag(self.block_spawner_x, 0, self)
         for button in self.buttons:
             button.render()
+        dt = self.particle_clock.tick() / 1000
+        self.particles.draw(self.app.screen)
+        self.particles.update(dt)
 
 
 
