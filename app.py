@@ -1,5 +1,5 @@
 import pygame, json
-from classes import mainmenu
+from classes import mainmenu, player
 import settings_values
 resolutions = ["1000x800", "1200x900", "1920x1080", "2560x1440"]
 class App:
@@ -22,6 +22,7 @@ class App:
         self.is_vsync_enabled = vsync
         self.scale = 1
         self.ui = mainmenu.MainMenu(self)
+        self.onLevel = False
 
         # Initialize pygame
         pygame.init()
@@ -36,6 +37,14 @@ class App:
 
         pygame.display.set_caption("Tetris")
 
+    def LogPlayer(self):
+        if player.Player.NickExists(self.ui.textBox.text):
+            return False
+
+        self.player = player.Player(self.ui.textBox.text)
+        print(self.ui.textBox.text)
+        return True
+
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,8 +55,12 @@ class App:
                 for button in self.ui.buttons:
                     if button.rect.collidepoint(click_pos[0], click_pos[1]):
                         button.click()
+                if not self.onLevel:
+                    self.ui.textBox.handle_event(event)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 print(pygame.mouse.get_pos())
+            if not self.onLevel and event.type == pygame.KEYDOWN:
+               self.ui.textBox.handle_event(event)
 
 
     def background(self):

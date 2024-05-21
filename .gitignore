@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# stats folder
+stats/
+
 # Distribution / packaging
 .Python
 build/
