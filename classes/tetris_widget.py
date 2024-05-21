@@ -10,7 +10,7 @@ class NextStructuresWidget:
         self.width = self.app.width / 5
         self.height = self.app.height * 3 / 4
         self.x = self.app.width * 3/ 4
-        self.y = self.app.width / 10
+        self.y = self.app.height / 10
         self.bg_color = bg_color
         self.font = pygame.font.Font("fonts/main_font.ttf", 48)
         self.title_text = self.font.render(f"NEXT", True, (255, 255, 255))
@@ -39,7 +39,7 @@ class HoldWidget:
         self.game = game
         self.app = app
         self.width = self.app.width / 5
-        self.height = self.app.height / 3.5
+        self.height = self.app.height / 5
         self.x = self.app.width / 20
         self.y = self.app.width / 10
         self.bg_color = bg_color

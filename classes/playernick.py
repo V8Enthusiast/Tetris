@@ -5,6 +5,20 @@ class Playernick:
     statDirectory = 'stats'
     playersPath = 'players.txt'
     workingDirectory = os.getcwd()
+    Nickname = ''
+
+    @staticmethod
+    def GetNickname():
+        return Playernick.Nickname
+
+    @staticmethod
+    def SetNickname(nick):
+        Playernick.Nickname = nick
+        Playernick.CreatePlayersFileIfNotExists()
+        if not Playernick.NickExists(nick):
+            self.AppendToFile()
+        playersArray = Playernick.GetAllPLayers()
+        Playernick.CreateFileForPlayer()
 
     @staticmethod
     def CreatePlayersFileIfNotExists():
@@ -14,7 +28,8 @@ class Playernick:
             open(path, 'a')
     @staticmethod
     def NickExists(nick):
-        if Playernick.GetAllPLayers().__contains__(nick):
+        list = Playernick.GetAllPLayers()
+        if list.__contains__(nick + '\n'):
             return True
         return False
 
@@ -25,18 +40,11 @@ class Playernick:
         f = open(path, 'r')
         return f.readlines()
 
-    def __init__(self, nickname):
-        self.nick = nickname
-        self.CreatePlayersFileIfNotExists()
-        if not Playernick.NickExists(nickname):
-            self.AppendToFile()
-        self.playersArray = Playernick.GetAllPLayers()
-        self.CreateFileForPlayer()
-
+    @staticmethod
     def AppendToFile(self):
         path = os.path.join(Playernick.workingDirectory, Playernick.statDirectory, Playernick.playersPath)
         f = open(path, 'a')
-        f.write(self.nick + '\n')
+        f.write(Playernick.Nickname + '\n')
 
     @staticmethod
     def CreateStatDir():
@@ -44,16 +52,33 @@ class Playernick:
         if not os.path.exists(path):
             os.mkdir(path)
 
-
-    def SaveScore(self, score):
-        filename = self.nick + '.txt'
+    @staticmethod
+    def SaveScore(score):
+        filename = Playernick.Nickname + '.txt'
         path = os.path.join(Playernick.workingDirectory, Playernick.statDirectory, filename)
         f = open(path, 'a')
-        f.write(score + '\n')
+        f.write(str(score) + '\n')
 
-    def CreateFileForPlayer(self):
+    @staticmethod
+    def CreateFileForPlayer():
         Playernick.CreateStatDir()
-        filename = self.nick + '.txt'
+        filename = Playernick.Nickname + '.txt'
         path = os.path.join(Playernick.workingDirectory, Playernick.statDirectory, filename)
         if not os.path.exists(path):
             open(path, 'a')
+
+    @staticmethod
+    def GetBestScore():
+        filename = Playernick.Nickname + '.txt'
+        path = os.path.join(Playernick.workingDirectory, Playernick.statDirectory, filename)
+        if not os.path.exists(path):
+            return -1
+
+        f = open(path, 'r')
+        lines = f.readlines()
+        if len(lines) == 0:
+            return -1
+        ints = [int(numeric_string) for numeric_string in lines]
+        return max(ints)
+
+

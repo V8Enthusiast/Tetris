@@ -1,5 +1,5 @@
 import settings_values
-from classes import tetris_widget, tetris_structure, buttons, particles, block
+from classes import tetris_widget, tetris_structure, buttons, particles, block, playernick
 import pygame, random
 import time
 colors = [(0,173,238), (27,116,187), (246,146,30), (255,241,0), (139,197,63), (101,45,144),(236,27,36)]
@@ -18,7 +18,9 @@ class TetrisGame:
         self.COLUMNS = columns
         self.font = "fonts/main_font.ttf"
         self.font_color = (255, 255, 255)
-        self.buttons = [buttons.Button(250 * self.app.scale, 75 * self.app.scale, 55 * self.app.scale, self.app.height - 175 * self.app.scale/2, False, self.font, "Back to menu", (0, 0, 0), self.font_color, 'back_to_menu', self.app)]
+        self.buttons = [buttons.Button(250 * self.app.scale, 75 * self.app.scale, 55 * self.app.scale, self.app.height - 175 * self.app.scale/2, False, self.font, "Back to menu", (0, 0, 0), self.font_color, 'back_to_menu', self.app),
+                        buttons.Button(250 * app.scale, 100 * app.scale, self.app.width / 2  - 250 * self.app.scale / 2, self.app.height / 2 + 150 * self.app.scale, False, self.font, "Save score", (0, 0, 0), self.font_color, 'save_score', self.app)]
+
         self.blocks = {}
         self.map = [[0 for _ in range(columns)] for i in range(rows)]
         self.tile_size = self.app.height/self.ROWS
@@ -146,10 +148,21 @@ class TetrisGame:
     def render(self):
         if self.game_over:
             self.draw_tiles()
+            self.buttons[1].render()
+            score = playernick.Playernick.GetBestScore()
+
             game_over_font = pygame.font.SysFont('Impact', 148)
             game_over_text = game_over_font.render("Game Over", True, (255, 255, 255))
-            text_rect = game_over_text.get_rect(center=(self.app.width // 2, self.app.height // 2))
+
+            score_font = pygame.font.SysFont('Impact', 50)
+            score_text = score_font.render(str(playernick.Playernick.GetNickname()) +
+                                           "'s Best Score: " + str(score), True, (255, 255, 255))
+
+            score_text_rect = score_text.get_rect(center=(self.app.width // 2, self.app.height // 2 + 100))
+            text_rect = game_over_text.get_rect(center=(self.app.width // 2, self.app.height // 2 ))
+
             self.app.screen.blit(game_over_text, text_rect)
+            self.app.screen.blit(score_text, score_text_rect)
         else:
             self.check_for_completed_rows()
             self.draw_tiles()
@@ -170,8 +183,7 @@ class TetrisGame:
                 self.next_structures.pop(0)
                 if len(self.next_structures) <= 3:
                     self.next_structures += tetris_structure.generate_bag(self.block_spawner_x, 0, self)
-        for button in self.buttons:
-            button.render()
+        self.buttons[0].render()
         dt = self.particle_clock.tick() / 1000
         self.particles.draw(self.app.screen)
         self.particles.update(dt)

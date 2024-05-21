@@ -1,5 +1,5 @@
 import random
-from classes import settings, tetris, levelselect, mainmenu
+from classes import settings, tetris, levelselect, mainmenu, playernick
 import pygame
 
 import pygame
@@ -64,7 +64,7 @@ class Button:
         elif self.function == 'settings':
             self.app.ui = settings.Settings(self.app)
         elif self.function == 'save_score':
-            print("Saved score")
+            playernick.Playernick.SaveScore(self.app.ui.score)
         elif self.function == 'plus':
             self.app.ui.add()
         elif self.function == 'minus':

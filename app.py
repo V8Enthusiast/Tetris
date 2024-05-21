@@ -38,11 +38,8 @@ class App:
         pygame.display.set_caption("Tetris")
 
     def LogPlayer(self):
-        if playernick.Playernick.NickExists(self.ui.textBox.text):
-            return False
-
-        self.player = playernick.Playernick(self.ui.textBox.text)
-        print(self.ui.textBox.text)
+        playernick.Playernick.SetNickname(self.ui.textBox.text)
+        print(playernick.Playernick.GetNickname())
         return True
 
     def events(self):
