@@ -2,7 +2,7 @@ import random
 import time
 
 import pygame
-from classes import buttons, tetris_widget, tetris_structure, textBox
+from classes import buttons, tetris_widget, tetris_structure, inputBox
 class MainMenu:
     def __init__(self, app):
         self.app = app
@@ -10,7 +10,7 @@ class MainMenu:
         self.font = "fonts/main_font.ttf"
         self.font_color = (255, 255, 255)
         self.buttons = [buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 100 * self.app.scale, self.app.height/2 - 75 * self.app.scale/2, False, self.font, "Start", (0, 0, 0), self.font_color, 'start', self.app), buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 - 100 * self.app.scale, self.app.height/2 + 150 * self.app.scale/2, False, self.font, "Settings", (0, 0, 0), self.font_color, 'settings', self.app)]
-        self.textBox = textBox.TextBox(self.app.width/2 - 100 * self.app.scale,
+        self.textBox = inputBox.TextBox(self.app.width/2 - 100 * self.app.scale,
                                        self.app.height/2 - 300 * self.app.scale/2,
                                        200 * self.app.scale,
                                        75 * self.app.scale,

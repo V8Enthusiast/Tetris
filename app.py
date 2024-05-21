@@ -1,5 +1,5 @@
 import pygame, json
-from classes import mainmenu, player
+from classes import mainmenu, playernick
 import settings_values
 resolutions = ["1000x800", "1200x900", "1920x1080", "2560x1440"]
 class App:
@@ -38,10 +38,10 @@ class App:
         pygame.display.set_caption("Tetris")
 
     def LogPlayer(self):
-        if player.Player.NickExists(self.ui.textBox.text):
+        if playernick.Playernick.NickExists(self.ui.textBox.text):
             return False
 
-        self.player = player.Player(self.ui.textBox.text)
+        self.player = playernick.Playernick(self.ui.textBox.text)
         print(self.ui.textBox.text)
         return True
 
