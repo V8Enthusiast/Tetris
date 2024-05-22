@@ -39,7 +39,7 @@ class App:
         if self.ui.textBox.text == 'Your nick':
             self.ui.textBox.text = "Player 1"
         playernick.Playernick.SetNickname(self.ui.textBox.text)
-        print(playernick.Playernick.GetNickname())
+        #print(playernick.Playernick.GetNickname())
         return True
 
     def events(self):
@@ -55,7 +55,8 @@ class App:
                 if type(self.ui) == mainmenu.MainMenu and self.onLevel is False:
                     self.ui.textBox.handle_event(event)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                print(pygame.mouse.get_pos())
+                pass
+                #print(pygame.mouse.get_pos())
             if not self.onLevel and event.type == pygame.KEYDOWN:
                self.ui.textBox.handle_event(event)
 

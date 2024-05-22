@@ -13,7 +13,7 @@ class Settings:
         self.font = "fonts/main_font.ttf"
         self.font_color = (255, 255, 255)
         settings = self.read_settings('settings.json')
-        print(settings)
+        #print(settings)
         self.buttons = [buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 575 * self.app.scale/2, False, self.font, f"{resolutions[settings['Resolution']]}", (0, 0, 0), self.font_color, 'resolution', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 375 * self.app.scale/2, False, self.font, f"{settings['Fullscreen']}", (0, 0, 0), self.font_color, 'fullscreen', self.app),
                         buttons.Button(200 * self.app.scale, 75 * self.app.scale, self.app.width/2 + 100 * self.app.scale, self.app.height/2 - 175 * self.app.scale/2, False, self.font, f"{gamemodes[settings['Gamemode']]}", (0, 0, 0), self.font_color, 'mode', self.app),
