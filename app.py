@@ -33,7 +33,10 @@ class App:
 
         self.run = True # Variable to determine if the app is running
 
+        img = pygame.image.load("img/icon.png")
+
         pygame.display.set_caption("Tetris")
+        pygame.display.set_icon(img)
 
     def LogPlayer(self):
         if self.ui.textBox.text == 'Your nick':
