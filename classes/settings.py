@@ -2,8 +2,6 @@ import pygame
 from classes import buttons
 import settings_values
 import json
-# resolution, fullscreen
-# number of blocks in a structure, default level, block colors, max fall speed
 
 resolutions = ["1000x800", "1200x900", "1920x1080", "2560x1440"]
 gamemodes = ["3 Tetris", "Tetris", "5 Tetris"]

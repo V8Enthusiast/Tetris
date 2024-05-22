@@ -16,7 +16,7 @@ class Playernick:
         Playernick.Nickname = nick
         Playernick.CreatePlayersFileIfNotExists()
         if not Playernick.NickExists(nick):
-            self.AppendToFile()
+            Playernick.AppendToFile()
         playersArray = Playernick.GetAllPLayers()
         Playernick.CreateFileForPlayer()
 
@@ -41,7 +41,7 @@ class Playernick:
         return f.readlines()
 
     @staticmethod
-    def AppendToFile(self):
+    def AppendToFile():
         path = os.path.join(Playernick.workingDirectory, Playernick.statDirectory, Playernick.playersPath)
         f = open(path, 'a')
         f.write(Playernick.Nickname + '\n')

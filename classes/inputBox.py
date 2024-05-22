@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import colorsys
 
@@ -6,14 +8,18 @@ FONT = pygame.font.Font(None, 32)
 BLACK = (0,0,0)
 class TextBox:
     def __init__(self, x, y, w, h, app, font, text=''):
+        self.app = app
         self.rect = pygame.Rect(x, y, w, h)
         self.color = BLACK
-        self.text = text
+        self.color2 = random.choice(colors)
+        if self.app.last_player != '':
+            self.text = self.app.last_player
+        else:
+            self.text = text
         self.txt_surface = FONT.render(text, True, BLACK)
         self.active = False
         self.outline_color = (255, 255, 255)  # Initial outline color
         self.hue = 0  # Starting hue
-        self.app = app
         self.font_type = font
         self.max_length = 10
 
@@ -26,7 +32,15 @@ class TextBox:
             else:
                 self.active = False
             # Change the current color of the input box.
-            self.color = colors[0] if self.active else BLACK
+            self.color = self.color2 if self.active else BLACK
+            if self.active:
+                if self.text == 'Your nick':
+                    self.text = ''
+            else:
+                if self.text == '':
+                    self.text = 'Your nick'
+                else:
+                    self.app.last_player = self.text
 
         if event.type == pygame.KEYDOWN:
             if self.active:
@@ -42,8 +56,8 @@ class TextBox:
 
     def render(self):
         # Update the outline color
-        self.hue = (self.hue - 0.001) % 1  # Increment hue and wrap around at 1
-        self.outline_color = tuple(int(c * 255) for c in colorsys.hsv_to_rgb(self.hue, 1, 1))
+        # self.hue = (self.hue - 0.001) % 1  # Increment hue and wrap around at 1
+        # self.outline_color = tuple(int(c * 255) for c in colorsys.hsv_to_rgb(self.hue, 1, 1))
 
         self.font = pygame.font.Font(self.font_type, int(32 * self.app.scale))
         self.display_text = self.font.render(self.text, True, (255, 255, 255))

@@ -19,7 +19,7 @@ class TetrisGame:
         self.font = "fonts/main_font.ttf"
         self.font_color = (255, 255, 255)
         self.buttons = [buttons.Button(250 * self.app.scale, 75 * self.app.scale, 55 * self.app.scale, self.app.height - 175 * self.app.scale/2, False, self.font, "Back to menu", (0, 0, 0), self.font_color, 'back_to_menu', self.app),
-                        buttons.Button(250 * app.scale, 100 * app.scale, self.app.width / 2  - 250 * self.app.scale / 2, self.app.height / 2 + 150 * self.app.scale, False, self.font, "Save score", (0, 0, 0), self.font_color, 'save_score', self.app)]
+                        buttons.Button(250 * app.scale, 100 * app.scale, self.app.width / 2 - 250 * self.app.scale / 2, self.app.height / 2 + 150 * self.app.scale, False, self.font, "Save score", (0, 0, 0), self.font_color, 'save_score', self.app)]
 
         self.blocks = {}
         self.map = [[0 for _ in range(columns)] for i in range(rows)]

@@ -11,8 +11,6 @@ class App:
         settings_values.default_level = settings['Default level']
         settings_values.block_colors = settings['Block colors']
         settings_values.max_fall_speed = settings['Max fall speed']
-
-        print(f"{settings_values.mode} xd")
         # Save the data passed into the function to variables
         self.clock = pygame.time.Clock()
         self.fps = 60
@@ -21,9 +19,9 @@ class App:
         self.is_FS_enabled = fullscreen
         self.is_vsync_enabled = vsync
         self.scale = 1
+        self.last_player = ''
         self.ui = mainmenu.MainMenu(self)
         self.onLevel = False
-
         # Initialize pygame
         pygame.init()
 
@@ -38,6 +36,8 @@ class App:
         pygame.display.set_caption("Tetris")
 
     def LogPlayer(self):
+        if self.ui.textBox.text == 'Your nick':
+            self.ui.textBox.text = "Player 1"
         playernick.Playernick.SetNickname(self.ui.textBox.text)
         print(playernick.Playernick.GetNickname())
         return True
@@ -52,7 +52,7 @@ class App:
                 for button in self.ui.buttons:
                     if button.rect.collidepoint(click_pos[0], click_pos[1]):
                         button.click()
-                if not self.onLevel:
+                if type(self.ui) == mainmenu.MainMenu and self.onLevel is False:
                     self.ui.textBox.handle_event(event)
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 print(pygame.mouse.get_pos())

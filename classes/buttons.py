@@ -23,7 +23,11 @@ class Button:
         self.function = function
         self.outline_color = (255, 255, 255)  # Initial outline color
         self.hue = 0  # Starting hue
-
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.font = pygame.font.Font(self.font_type, int(32 * self.app.scale))
+        self.display_text = self.font.render(self.text, True, self.fgcolor)
+        self.display_text_rect = self.display_text.get_rect()
+        self.display_text_rect.center = self.rect.center
         self.random_color = random_color
         if self.random_color:
             self.hover_color = random.choice(colors)
@@ -32,12 +36,9 @@ class Button:
         pygame.font.init()
 
     def render(self):
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.font = pygame.font.Font(self.font_type, int(32 * self.app.scale))
         self.display_text = self.font.render(self.text, True, self.fgcolor)
         self.display_text_rect = self.display_text.get_rect()
         self.display_text_rect.center = self.rect.center
-
         mouse_x, mouse_y = pygame.mouse.get_pos()
         if self.rect.collidepoint(mouse_x, mouse_y):
             current_bg_color = self.hover_color
@@ -54,14 +55,16 @@ class Button:
         self.app.screen.blit(self.display_text, self.display_text_rect)
     def click(self):
         if self.function == 'start':
+            self.app.last_player = self.app.ui.textBox.text
             self.app.LogPlayer()
-            self.app.onLevel = True;
+            self.app.onLevel = True
             self.app.ui = levelselect.LevelSelect(self.app)
             #self.app.ui = tetris.TetrisGame(self.app, 20, 10) # Change the displayed ui to the simulation
         elif self.function == 'start_game':
             level = self.app.ui.selected_level
             self.app.ui = tetris.TetrisGame(self.app, 20, 10, level)  # Change the displayed ui to the simulation
         elif self.function == 'settings':
+            self.app.last_player = self.app.ui.textBox.text
             self.app.ui = settings.Settings(self.app)
         elif self.function == 'save_score':
             playernick.Playernick.SaveScore(self.app.ui.score)
